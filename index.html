@@ -13,8 +13,10 @@
     </style>
 </head>
 <body>
-    <ul id="tabs">
-        <li >
+    <!-- Container -->
+    <ul id="tabs1">
+        <!-- Tabs -->
+        <li>
             <a href="#tab1">Tab 1</a>
         </li>
         <li>
@@ -24,18 +26,37 @@
             <a href="#tab3">Tab 3</a>
         </li>
     </ul>
-    <div id="tab1">
-        Tab1 content
-    </div>
-    <div id="tab2">
-        Tab2 content
-    </div>
-    <div id="tab3">
-        Tab3 content
-    </div>
+
+    <!-- Panels -->
+    <div id="tab1">Tab1 content</div>
+    <div id="tab2">Tab2 content</div>
+    <div id="tab3">Tab3 content</div>
+
+    <ul id="tabs2">
+        <!-- Tabs -->
+        <li>
+            <a href="#tabA">Tab A</a>
+        </li>
+        <li>
+            <a href="#tabB">Tab B</a>
+        </li>
+        <li>
+            <a href="#tabC">Tab C</a>
+        </li>
+    </ul>
+
+    <!-- Panels -->
+    <div id="tabA">TabA content</div>
+    <div id="tabB">TabB content</div>
+    <div id="tabC">TabC content</div>
+
     <script src="./src/tabzy.js"></script>
     <script>
-        const tabs=new Tabzy("#tabs", {
+        const tabs1 = new Tabzy("#tabs1", {
+            remember: true,
+        });
+
+        const tabs2 = new Tabzy("#tabs2", {
             remember: true,
         });
     </script>

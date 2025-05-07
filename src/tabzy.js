@@ -14,12 +14,15 @@ function Tabzy(selector, options={}){
     this.panels=this.tabs.map((tab)=>{
         const panel=document.querySelector(tab.getAttribute("href"));
         if(!panel){
-            console.error(`Tabzy: No panel found for selector '${tab.getAttribute(
-                "href")}'`
-                );
+            console.error(
+                `Tabzy: No panel found for selector '${tab.getAttribute(
+                "href"
+                )}'`
+            );
         }
         return panel;
-    }).filter(Boolean);
+    })
+    .filter(Boolean);
 
     if (this.tabs.length !== this.panels.length) return;
     this.opt=Object.assign(
@@ -30,14 +33,16 @@ function Tabzy(selector, options={}){
     );
 
     this._originalHTML = this.container.innerHTML;
+
     this._init();
 };
 
 Tabzy.prototype._init=function(){
-    const hash=location.hash;
+    const params=new URLSearchParams(location.search);
+    const tabSelector=params.get("tab");
     const tab=(
-        this.opt.remember && this.tabs.find((tab)=>tab.getAttribute("href")===hash)
-    ) || this._activeTab(this.tabs[0]);
+        this.opt.remember && tabSelector && this.tabs.find((tab)=>tab.getAttribute("href")===tabSelector)
+    ) || this.tabs[0];
 
     this._activeTab(tab);
 
@@ -63,7 +68,7 @@ Tabzy.prototype._activeTab=function(tab){
     panelActive.hidden = false;
 
     if (this.opt.remember) {
-        history.replaceState(null, null, tab.getAttribute("href"));
+        history.replaceState(null, null, `?tab=${encodeURIComponent(tab.getAttribute("href"))}`);
     }
 };
 
