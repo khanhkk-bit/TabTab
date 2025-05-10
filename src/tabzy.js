@@ -28,6 +28,7 @@ function Tabzy(selector, options={}){
     this.opt=Object.assign(
         {
             remember:false,
+            onChange: null,
         },
         options
     );
@@ -47,7 +48,8 @@ Tabzy.prototype._init=function(){
         && this.tabs.find((tab)=>tab.getAttribute("href").replace(/[^a-zA-Z0-9]/g,"")===tabSelector)
     ) || this.tabs[0];
 
-    this._activeTab(tab);
+    this.currentTab=tab;
+    this._activeTab(tab, false);
 
     this.tabs.forEach((tab) => {
         tab.onclick = (event) => this._handleTabClick(event, tab);
@@ -56,10 +58,17 @@ Tabzy.prototype._init=function(){
 }
 Tabzy.prototype._handleTabClick=function(envent, tab){
     envent.preventDefault();
-    this._activeTab(tab);
+    this._tryActivateTab(tab);
 };
 
-Tabzy.prototype._activeTab=function(tab){
+Tabzy.prototype._tryActivateTab=function(tab){
+    if(this.currentTab!==tab){
+        this._activeTab(tab);
+        this.currentTab=tab;
+    }
+}
+
+Tabzy.prototype._activeTab=function(tab, triggerOnChange=true){
     this.tabs.forEach((tab)=>{
         tab.closest("li").classList.remove("tabzy--active");
     });
@@ -75,6 +84,13 @@ Tabzy.prototype._activeTab=function(tab){
         const paramValue=tab.getAttribute("href").replace(/[^a-zA-Z0-9]/g,"");
         params.set(this.paramKey, paramValue);
         history.replaceState(null,null,`?${params}`);
+    }
+
+    if(triggerOnChange && typeof this.opt.onChange ==="function"){
+        this.opt.onChange({
+            tab,
+            panel: panelActive,
+        });
     }
 };
 
@@ -98,7 +114,8 @@ Tabzy.prototype.switch=function(input){
         console.error(`Tabzy: Invalid input '${input}'`);
         return;
     }
-    this._activeTab(tabToActivate);
+    this._tryActivateTab(tabToActivate);
+
 }
 
 Tabzy.prototype.destroy=function(){
@@ -109,4 +126,5 @@ Tabzy.prototype.destroy=function(){
     this.panels=null;
     this.tabs=null;
     this.container=null;
+    this.currentTab=null;
 }
