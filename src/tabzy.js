@@ -55,7 +55,7 @@ Tabzy.prototype._init=function(){
     ) || this.tabs[0];
 
     this.currentTab=tab;
-    this._activeTab(tab, false);
+    this._activeTab(tab, false, false);
 
     this.tabs.forEach((tab) => {
         tab.onclick = (event) => {
@@ -73,7 +73,7 @@ Tabzy.prototype._tryActivateTab=function(tab){
     }
 }
 
-Tabzy.prototype._activeTab=function(tab, triggerOnChange=true){
+Tabzy.prototype._activeTab=function(tab, triggerOnChange=true, upDateURL=this.opt.remember){
     this.tabs.forEach((tab)=>{
         tab.closest("li").classList.remove(this.opt.activeClassName);
     });
@@ -84,7 +84,7 @@ Tabzy.prototype._activeTab=function(tab, triggerOnChange=true){
     const panelActive = document.querySelector(tab.getAttribute("href"));
     panelActive.hidden = false;
 
-    if (this.opt.remember) {
+    if (upDateURL) {
         const params=new URLSearchParams(location.search);
         const paramValue=tab.getAttribute("href").replace(this._cleanRegex,"");
         params.set(this.paramKey, paramValue);
@@ -105,20 +105,6 @@ Tabzy.prototype.switch=function(input){
     :this.tabs.includes(input) 
     ? input : null
 
-    // let tabToActivate=null;
-    // if(typeof(input)==="string"){
-    //     tabToActivate=this.tabs.find(
-    //         (tab)=>tab.getAttribute("href")===input
-    //     );
-
-    //     if (!tabToActivate) {
-    //         console.error(`Tabzy: No panel found with ID '${input}'`);
-    //         return;
-    //     }
-    // }
-    // else if (this.tabs.includes(input)) {
-    //     tabToActivate = input;
-    // }
     if (!tab) {
         console.error(`Tabzy: Invalid input '${input}'`);
         return;
